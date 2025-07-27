@@ -1,0 +1,10 @@
+### generate event
+POST http://localhost:8080/event
+Content-Type: application/json
+
+{}
+
+### calc stat
+GET http://localhost:8080/ham?ids=1,2,3
+
+
