@@ -21,7 +21,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
 	implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
+	implementation("io.ktor:ktor-client-core:3.2.2")
+	implementation("io.ktor:ktor-client-cio:3.2.2")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

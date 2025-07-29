@@ -14,8 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.IntStream
 
 @Service
-class HamStatService(ham: HamsterTimer) : StatTimerService {
-    val hamTimer: HamsterTimer = ham
+class HamStatService() : StatTimerService {
     private val userStat: MutableMap<Instant, MutableMap<Int, MutableSet<Int>>> = ConcurrentHashMap()
     override fun today(): Instant {
         return Instant.now().truncatedTo(ChronoUnit.DAYS)
@@ -40,6 +39,6 @@ class HamStatService(ham: HamsterTimer) : StatTimerService {
     @Scheduled(cron = "0 10 0 * * *", zone = "UTC")
     internal suspend fun statClean() {
         userStat.remove(today().minus(2, ChronoUnit.DAYS))
-        hamTimer.flowEventRandomized()
+
     }
 }
