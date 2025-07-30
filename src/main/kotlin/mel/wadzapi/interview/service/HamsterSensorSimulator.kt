@@ -4,30 +4,31 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.prepareGet
 import io.ktor.client.statement.bodyAsText
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.springframework.stereotype.Component
-import java.util.Random
+import kotlinx.coroutines.runBlocking
 
-@Component
-class HamsterSensorSimulator(val client: HttpClient = HttpClient (CIO)) {
-
-    internal fun randomSeed(): IntArray {
-        return Random(1).ints(1000000, 0, 1000)
-            .toArray()
+class HamsterSensorSimulator(hamsterCount : Long = 1,
+                             sensorCount : Long = 1) {
+    companion object {
+        const val MIN_COUNT = 1;
+        const val MAX_COUNT = 10000;
     }
+
+    private val timer : HamsterTimer = HamsterTimer()
+
+    val client: HttpClient = HttpClient (CIO)
 
     suspend fun getHttp(reqUrl : String): String {
         return client.prepareGet(reqUrl).execute { response ->
             response.bodyAsText()
         }
     }
-
 
     fun <T> Flow<T>.chunked(chunkSize: Int): Flow<List<T>> {
         val buffer = mutableListOf<T>()
@@ -45,11 +46,12 @@ class HamsterSensorSimulator(val client: HttpClient = HttpClient (CIO)) {
         }
     }
 
-    fun CoroutineScope.startInfiniteScheduler(interval: Long = 1000L, task: suspend () -> Unit): Job {
-        return launch {
+    //FIXME: fun CoroutineScope.hamJob(): Job {
+    suspend fun hamJob(): Job = coroutineScope {
+         launch {
             while (isActive) {
-                task()
-                delay(interval)
+                timer.hamFlow().collect { value -> println(value) }
+                delay(1000L)
             }
         }
     }

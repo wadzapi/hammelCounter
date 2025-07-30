@@ -37,7 +37,7 @@ class HamStatService() : StatTimerService {
     }
 
     @Scheduled(cron = "0 10 0 * * *", zone = "UTC")
-    internal suspend fun statClean() {
+    internal fun statClean() {
         userStat.remove(today().minus(2, ChronoUnit.DAYS))
 
     }
