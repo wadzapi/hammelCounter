@@ -13,7 +13,7 @@ class HammelCounterApplication
 fun main(args: Array<String>) {
 	val hamsterSimulator = HamsterSensorSimulator()
 		runBlocking {
-			hamsterSimulator.hamJob()
+			hamsterSimulator.launchHamJobFlow()
 		}
 	runApplication<HammelCounterApplication>(*args)
 }

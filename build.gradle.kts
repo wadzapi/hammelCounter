@@ -21,10 +21,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-	/**TODO: klogger better than oshai, slf4 proxy for logback?
-	   //implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
-	   //implementation("io.klogging:klogging:0.11.4")
-	**/
+	implementation("io.klogging:slf4j-klogging:0.11.4")
 	implementation("org.uncommons:uncommons-maths:1.2")
 	implementation("io.ktor:ktor-client-core:3.2.2")
 	implementation("io.ktor:ktor-client-cio:3.2.2")

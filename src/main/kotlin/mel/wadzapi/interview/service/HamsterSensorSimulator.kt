@@ -4,14 +4,17 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.prepareGet
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class HamsterSensorSimulator(hamsterCount : Long = 1,
                              sensorCount : Long = 1) {
@@ -19,6 +22,7 @@ class HamsterSensorSimulator(hamsterCount : Long = 1,
         const val MIN_COUNT = 1;
         const val MAX_COUNT = 10000;
     }
+    //TODO: https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html#naming-coroutines-for-debugging
 
     private val timer : HamsterTimer = HamsterTimer()
 
@@ -46,8 +50,18 @@ class HamsterSensorSimulator(hamsterCount : Long = 1,
         }
     }
 
-    //FIXME: fun CoroutineScope.hamJob(): Job {
-    suspend fun hamJob(): Job = coroutineScope {
+    suspend fun hamLoopAsync(count : Int) : List<Job> = coroutineScope {
+        buildList<Deferred<Job>>(capacity = count) {
+            for (n in 0 until count) async(Dispatchers.Default) {
+                launchHamJobFlow()
+            }
+        }.awaitAll()
+    }
+
+
+
+    //async vs launch test
+    suspend fun launchHamJobFlow(): Job = coroutineScope {
          launch {
             while (isActive) {
                 timer.hamFlow().collect { value -> println(value) }
