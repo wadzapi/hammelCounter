@@ -1,21 +1,29 @@
-package mel.wadzapi.interview.service
+package me.wadzapi.interview.service.impl
 
-import mel.wadzapi.interview.controller.dto.EventHappensDto
-import mel.wadzapi.interview.controller.dto.HamStatResponseDto
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Service
+import io.klogging.Klogging
+import io.vertx.core.AbstractVerticle
+import io.vertx.core.Promise
+import me.wadzapi.interview.entity.EventHappensDto
+import me.wadzapi.interview.entity.HamStatResponseDto
+import me.wadzapi.interview.service.StatTimerService
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Collections
 import java.util.HashMap
 import java.util.HashSet
 import java.util.Objects
+import java.util.Timer
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.IntStream
+import kotlin.concurrent.timerTask
 
-@Service
-class HamStatService() : StatTimerService {
+class HamStatService() : AbstractVerticle(), StatTimerService, Klogging {
     private val userStat: MutableMap<Instant, MutableMap<Int, MutableSet<Int>>> = ConcurrentHashMap()
+
+    override fun start(promise: Promise<Void>) {
+        startupCleaner()
+    }
+
     override fun today(): Instant {
         return Instant.now().truncatedTo(ChronoUnit.DAYS)
     }
@@ -36,9 +44,16 @@ class HamStatService() : StatTimerService {
         return HamStatResponseDto(cnt)
     }
 
-    @Scheduled(cron = "0 10 0 * * *", zone = "UTC")
-    internal fun statClean() {
-        userStat.remove(today().minus(2, ChronoUnit.DAYS))
+    internal fun startupCleaner() = Timer().scheduleAtFixedRate(
+        timerTask {
+            userStat.remove(today().minus(2, ChronoUnit.DAYS))
+        },
+        0L,
+        CLEANUP_INTERVAL
+    )
+
+    companion object {
+        const val CLEANUP_INTERVAL = 86400000L
 
     }
 }

@@ -1,4 +1,4 @@
-package mel.wadzapi.interview.entity
+package me.wadzapi.interview.entity
 
 // События от датчиков
 sealed class HamsterEvent {

@@ -1,9 +1,9 @@
-package mel.wadzapi.interview.service
+package me.wadzapi.interview.service
 
 import io.klogging.Klogging
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
-import mel.wadzapi.interview.entity.HamsterEvent
+import me.wadzapi.interview.entity.HamsterEvent
 import org.uncommons.maths.number.NumberGenerator
 import org.uncommons.maths.random.ExponentialGenerator
 import org.uncommons.maths.random.MersenneTwisterRNG

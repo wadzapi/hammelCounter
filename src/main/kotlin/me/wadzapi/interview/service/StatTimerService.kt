@@ -1,7 +1,7 @@
-package mel.wadzapi.interview.service
+package me.wadzapi.interview.service
 
-import mel.wadzapi.interview.controller.dto.EventHappensDto
-import mel.wadzapi.interview.controller.dto.HamStatResponseDto
+import me.wadzapi.interview.entity.EventHappensDto
+import me.wadzapi.interview.entity.HamStatResponseDto
 import java.time.Instant
 
 //TODO: javadocs && layering
